@@ -20,7 +20,7 @@ Explorer:
  - 16GB RAM
  - 1TB of storage (SSD or NVME)
 
-## Set up your nibiru fullnode
+## Set up your artela fullnode
 ```
 wget https://raw.githubusercontent.com/freshe4qa/artela/main/artela.sh && chmod +x artela.sh && ./artela.sh
 ```

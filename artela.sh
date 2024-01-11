@@ -107,23 +107,24 @@ sed -i "s/snapshot-interval *=.*/snapshot-interval = 0/g" $HOME/.artelad/config/
 sed -i -e "s/prometheus = false/prometheus = true/" $HOME/.artelad/config/config.toml
 
 # create service
-sudo tee /etc/systemd/system/artelad.service > /dev/null << EOF
+sudo tee /etc/systemd/system/artelad.service > /dev/null <<EOF
 [Unit]
-Description=Artela Node
+Description=artelad Daemon
 After=network-online.target
 [Service]
 User=$USER
-ExecStart=$(which nibid) start
-Restart=on-failure
-RestartSec=10
-LimitNOFILE=10000
+ExecStart=$(which artelad) start
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
 [Install]
 WantedBy=multi-user.target
 EOF
 
 # reset
-artelad tendermint unsafe-reset-all --home $HOME/.artelad --keep-addr-book 
-
+artelad tendermint unsafe-reset-all --home $HOME/.artelad --keep-addr-book
+SNAP_NAME=$(curl -s https://ss-t.artela.nodestake.org/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
+curl -o - -L https://ss-t.artela.nodestake.org/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/.artelad
 
 # start service
 sudo systemctl daemon-reload

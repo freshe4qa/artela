@@ -52,14 +52,13 @@ apt install curl iptables build-essential git wget jq make gcc nano tmux htop nv
 
 # install go
 if ! [ -x "$(command -v go)" ]; then
-ver="1.20.3" && \
+ver="1.21.3" && \
 wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz" && \
 sudo rm -rf /usr/local/go && \
 sudo tar -C /usr/local -xzf "go$ver.linux-amd64.tar.gz" && \
 rm "go$ver.linux-amd64.tar.gz" && \
 echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> $HOME/.bash_profile && \
-source $HOME/.bash_profile && \
-go version
+source $HOME/.bash_profile
 fi
 
 # download binary
@@ -81,7 +80,7 @@ wget -qO $HOME/.artelad/config/genesis.json https://docs.artela.network/assets/f
 wget -qO $HOME/.artelad/config/addrbook.json https://snapshots.theamsolutions.info/artela-addrbook.json
 
 # set minimum gas price
-sed -i -e "s|^minimum-gas-prices *=.*|minimum-gas-prices = \"0.02uart\"|" $HOME/.artelad/config/app.toml
+sed -i -e "s|^minimum-gas-prices *=.*|minimum-gas-prices = \"20000000000uart\"|" $HOME/.artelad/config/app.toml
 
 # set peers and seeds
 SEEDS=""
@@ -123,8 +122,7 @@ EOF
 
 # reset
 artelad tendermint unsafe-reset-all --home $HOME/.artelad --keep-addr-book
-SNAP_NAME=$(curl -s https://ss-t.artela.nodestake.org/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
-curl -o - -L https://ss-t.artela.nodestake.org/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/.artelad
+curl https://snapshots-testnet.nodejumper.io/artela-testnet/artela-testnet_latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.artelad
 
 # start service
 sudo systemctl daemon-reload

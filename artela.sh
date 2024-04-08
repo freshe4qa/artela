@@ -76,8 +76,8 @@ artelad config keyring-backend test
 artelad init $NODENAME --chain-id $ARTELA_CHAIN_ID
 
 # download genesis and addrbook
-wget -qO $HOME/.artelad/config/genesis.json https://docs.artela.network/assets/files/genesis-314f4b0294712c1bc6c3f4213fa76465.json
-wget -qO $HOME/.artelad/config/addrbook.json https://snapshots.theamsolutions.info/artela-addrbook.json
+curl -L https://snapshots-testnet.nodejumper.io/artela-testnet/genesis.json > $HOME/.artelad/config/genesis.json
+curl -L https://snapshots-testnet.nodejumper.io/artela-testnet/addrbook.json > $HOME/.artelad/config/addrbook.json
 
 # set minimum gas price
 sed -i -e "s|^minimum-gas-prices *=.*|minimum-gas-prices = \"20000000000uart\"|" $HOME/.artelad/config/app.toml
@@ -150,14 +150,17 @@ break
 artelad tx staking create-validator \
 --amount=1000000uart \
 --pubkey=$(artelad tendermint show-validator) \
---moniker="$NODENAME" \
+--moniker=$NODENAME \
 --chain-id=artela_11822-1 \
---commission-rate=0.1 \
---commission-max-rate=0.2 \
---commission-max-change-rate=0.05 \
+--commission-rate=0.10 \
+--commission-max-rate=0.20 \
+--commission-max-change-rate=0.01 \
 --min-self-delegation=1 \
 --from=wallet \
--y
+--gas-prices=20000000000uart \
+--gas-adjustment=1.5 \
+--gas=auto \
+-y 
   
 break
 ;;

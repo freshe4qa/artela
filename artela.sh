@@ -51,15 +51,10 @@ sudo apt update && sudo apt upgrade -y
 apt install curl iptables build-essential git wget jq make gcc nano tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip libleveldb-dev -y
 
 # install go
-if ! [ -x "$(command -v go)" ]; then
-ver="1.21.3" && \
-wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz" && \
-sudo rm -rf /usr/local/go && \
-sudo tar -C /usr/local -xzf "go$ver.linux-amd64.tar.gz" && \
-rm "go$ver.linux-amd64.tar.gz" && \
-echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> $HOME/.bash_profile && \
-source $HOME/.bash_profile
-fi
+sudo rm -rf /usr/local/go
+curl -L https://go.dev/dl/go1.21.6.linux-amd64.tar.gz | sudo tar -xzf - -C /usr/local
+echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> $HOME/.bash_profile
+source .bash_profile
 
 # download binary
 cd $HOME && rm -rf artela
@@ -84,7 +79,7 @@ sed -i -e "s|^minimum-gas-prices *=.*|minimum-gas-prices = \"20000000000uart\"|"
 
 # set peers and seeds
 SEEDS="211536ab1414b5b9a2a759694902ea619b29c8b1@47.251.14.47:26656,d89e10d917f6f7472125aa4c060c05afa78a9d65@47.251.32.165:26656,bec6934fcddbac139bdecce19f81510cb5e02949@47.254.24.106:26656,32d0e4aec8d8a8e33273337e1821f2fe2309539a@47.88.58.36:26656,1bf5b73f1771ea84f9974b9f0015186f1daa4266@47.251.14.47:26656"
-PEERS="0efbb9d98a77ae55f05cb670e35be9bc0b8c4176@213.199.34.26:26011,615efb4ad2cbaebc8433eb4aac11043e60cd675d@109.199.104.0:26656,86f5fde6131c89ba921adb326e04086ca93785ad@109.123.252.137:26656,9e2fbfc4b32a1b013e53f3fc9b45638f4cddee36@47.254.66.177:26656,c86814b55c6a3c28f25da310eb995981818ba0b6@[2a01:4f8:251:1d6d::2]:26656,94eeceef12d2fed6da994d06b74d82121fc16988@173.208.138.208:26656,23065c6f8b19c3860e2f1dd7a6f74e29eae9641a@154.12.243.49:26656,df3f60d7b320f47e440fc86740315582385d61b6@109.199.127.163:26656,483d92a395b4913aabd09d9fb9e49471ed7a407e@95.214.53.164:26656,a84cd3e3d401f7b853135a4ca786057c7a0b913a@38.242.157.138:26656,301d46637a338c2855ede5d2a587ad1f366f3813@95.217.200.98:18656,4a626087eba893741a9364789fca377a7b07d600@121.207.190.12:26666,87a15a1034fce842c2667ff9e798b0449d692a8f@5.189.141.20:26656,0d4c6026f45e8bac5212ff412e1594b4ca4bc3ee@5.189.145.7:26656,e8b6576776f78008a3817da4e30f30e451b119b6@82.197.65.80:26656,924e74d9f71991609ae1b4347d4c8fe4557f3779@37.60.241.242:26656,519231b0bcc3523d0673c57381170aa3aed7bebe@178.141.254.11:26656"
+PEERS="db1d79226d9c735475bea5ba5a3c6a09f670d8d6@65.108.238.61:11656,5c4ea81ac7b8a7f5202fcbe5fe790a6d6f61fb22@47.251.14.108:26656,aa416d3628dcce6e87d4b92d1867c8eca36a70a7@47.254.93.86:26656,978dee673bd447147f61aa5a1bdaabdfb8f8b853@47.88.57.107:26656"
 sed -i -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/.artelad/config/config.toml
 
 # disable indexing
@@ -106,15 +101,15 @@ sed -i "s/snapshot-interval *=.*/snapshot-interval = 0/g" $HOME/.artelad/config/
 sed -i -e "s/prometheus = false/prometheus = true/" $HOME/.artelad/config/config.toml
 
 # create service
-sudo tee /etc/systemd/system/artelad.service > /dev/null <<EOF
+sudo tee /etc/systemd/system/artelad.service > /dev/null << EOF
 [Unit]
-Description=artelad Daemon
+Description=Artela node service
 After=network-online.target
 [Service]
 User=$USER
 ExecStart=$(which artelad) start
-Restart=always
-RestartSec=3
+Restart=on-failure
+RestartSec=10
 LimitNOFILE=65535
 [Install]
 WantedBy=multi-user.target

@@ -117,7 +117,8 @@ EOF
 
 # reset
 artelad tendermint unsafe-reset-all --home $HOME/.artelad --keep-addr-book
-curl https://snapshots-testnet.nodejumper.io/artela-testnet/artela-testnet_latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.artelad
+wget https://snapshots.bwarelabs.com/artela/testnet/artela20240613.tar.lz4
+lz4 -c -d artela20240613.tar.lz4  | tar -x -C $HOME/.artelad
 
 # start service
 sudo systemctl daemon-reload

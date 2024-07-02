@@ -60,7 +60,7 @@ source .bash_profile
 cd $HOME && rm -rf artela
 git clone https://github.com/artela-network/artela
 cd artela
-git checkout v0.4.7-rc6
+git checkout v0.4.7-rc6-12-g2dfe1c2
 make install
 
 # config
@@ -97,6 +97,9 @@ sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every
 sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/.artelad/config/app.toml
 sed -i "s/snapshot-interval *=.*/snapshot-interval = 0/g" $HOME/.artelad/config/app.toml
 
+#update
+sed -i -e "s/iavl-disable-fastnode = false/iavl-disable-fastnode = true/" $HOME/.artelad/config/app.toml
+
 # enable prometheus
 sed -i -e "s/prometheus = false/prometheus = true/" $HOME/.artelad/config/config.toml
 
@@ -117,8 +120,7 @@ EOF
 
 # reset
 artelad tendermint unsafe-reset-all --home $HOME/.artelad --keep-addr-book
-wget https://snapshots.bwarelabs.com/artela/testnet/artela20240613.tar.lz4
-lz4 -c -d artela20240613.tar.lz4  | tar -x -C $HOME/.artelad
+curl https://snapshots-testnet.nodejumper.io/artela-testnet/artela-testnet_latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.artelad
 
 # start service
 sudo systemctl daemon-reload

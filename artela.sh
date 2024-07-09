@@ -48,7 +48,7 @@ source $HOME/.bash_profile
 sudo apt update && sudo apt upgrade -y
 
 # packages
-apt install curl iptables build-essential git wget jq make gcc nano tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip libleveldb-dev -y
+apt install curl iptables build-essential git wget jq make gcc nano tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip libleveldb-dev lz4 -y
 
 # install go
 sudo rm -rf /usr/local/go
@@ -131,7 +131,7 @@ EOF
 
 # reset
 artelad tendermint unsafe-reset-all --home $HOME/.artelad --keep-addr-book
-curl https://snapshots-testnet.nodejumper.io/artela-testnet/artela-testnet_latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.artelad
+curl https://testnet-files.bonynode.online/artela/snap_artela.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.artelad
 
 # start service
 sudo systemctl daemon-reload

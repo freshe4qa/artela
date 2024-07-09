@@ -121,6 +121,7 @@ After=network-online.target
 [Service]
 User=$USER
 ExecStart=$(which artelad) start
+Environment="LD_LIBRARY_PATH=/root/libs"
 Restart=on-failure
 RestartSec=10
 LimitNOFILE=65535

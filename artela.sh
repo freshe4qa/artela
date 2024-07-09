@@ -63,6 +63,16 @@ cd artela
 git checkout v0.4.7-rc7-fix-execution
 make install
 
+#update lib
+cd $HOME
+wget https://github.com/artela-network/artela/releases/download/v0.4.7-rc7-fix-execution/artelad_0.4.7_rc7_fix_execution_Linux_amd64.tar.gz
+tar -xvf artelad_0.4.7_rc7_fix_execution_Linux_amd64.tar.gz
+mkdir libs
+mv $HOME/libaspect_wasm_instrument.so $HOME/libs/
+mv $HOME/artelad /usr/local/bin/
+echo 'export LD_LIBRARY_PATH=$HOME/libs:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+
 # config
 artelad config chain-id $ARTELA_CHAIN_ID
 artelad config keyring-backend test

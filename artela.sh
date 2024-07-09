@@ -81,15 +81,15 @@ artelad config keyring-backend test
 artelad init $NODENAME --chain-id $ARTELA_CHAIN_ID
 
 # download genesis and addrbook
-curl -L https://snapshots-testnet.nodejumper.io/artela-testnet/genesis.json > $HOME/.artelad/config/genesis.json
+wget -qO $HOME/.artelad/config/genesis.json https://public-snapshot-storage-develop.s3.ap-southeast-1.amazonaws.com/artela/artela_11822-1/genesis.json
 curl -L https://snapshots-testnet.nodejumper.io/artela-testnet/addrbook.json > $HOME/.artelad/config/addrbook.json
 
 # set minimum gas price
 sed -i -e "s|^minimum-gas-prices *=.*|minimum-gas-prices = \"20000000000uart\"|" $HOME/.artelad/config/app.toml
 
 # set peers and seeds
-SEEDS="211536ab1414b5b9a2a759694902ea619b29c8b1@47.251.14.47:26656,d89e10d917f6f7472125aa4c060c05afa78a9d65@47.251.32.165:26656,bec6934fcddbac139bdecce19f81510cb5e02949@47.254.24.106:26656,32d0e4aec8d8a8e33273337e1821f2fe2309539a@47.88.58.36:26656,1bf5b73f1771ea84f9974b9f0015186f1daa4266@47.251.14.47:26656"
-PEERS="db1d79226d9c735475bea5ba5a3c6a09f670d8d6@65.108.238.61:11656,5c4ea81ac7b8a7f5202fcbe5fe790a6d6f61fb22@47.251.14.108:26656,aa416d3628dcce6e87d4b92d1867c8eca36a70a7@47.254.93.86:26656,978dee673bd447147f61aa5a1bdaabdfb8f8b853@47.88.57.107:26656"
+SEEDS="59df4b3832446cd0f9c369da01f2aa5fe9647248@162.55.65.137:15956"
+PEERS="fee30216aa088a90fba8d82347a735ca959cd646@173.212.223.120:25656,fb582d9c8b56229142e0b1f25344b9701263aea7@185.215.165.45:3456,60b3963b03cbae7aa038d06726fd3946247d3507@217.15.162.238:3456,46925bebc56e38dd70230f82a6dbf87fa7fc6bcd@154.217.39.9:3456,c2d1aef4d9b2a8609a5f761771235f7c02280462@38.58.179.252:3456,6d1bc3d051c2e8eb2fe7df284cd505ab97eefcfe@75.119.131.252:3456,1f09c918f39240cf204996cd1239eccdbb22a779@45.136.17.26:3456,8d1b38c031f19bca255ed588a4885c99520090f7@161.97.169.2:3456,da1b93e7bbf6f4bfa35486894ae0c3f035b42f28@35.201.233.155:3456,41173f24734c1ec3876fcc9cffb8945299b7baf5@34.88.212.97:3456"
 sed -i -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/.artelad/config/config.toml
 
 # disable indexing

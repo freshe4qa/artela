@@ -60,7 +60,7 @@ source .bash_profile
 cd $HOME && rm -rf artela
 git clone https://github.com/artela-network/artela
 cd artela
-git checkout v0.4.7-rc7-fix-execution
+git checkout v0.4.9-rc9
 make install
 
 #update lib
